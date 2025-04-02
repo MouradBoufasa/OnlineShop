@@ -6,6 +6,10 @@ const SearchBar = () => {
   const handleSearchToggle = () => {
     setIsOpen(!isOpen);
   };
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setIsOpen(false);
+  };
   return (
     <div
       className={`flex items-center justify-center w-full transition-all duration-300 ${
@@ -13,11 +17,15 @@ const SearchBar = () => {
       }`}
     >
       {isOpen ? (
-        <form className="rlative flex items-center justify-center w-full">
+        <form
+          onSubmit={handleSearch}
+          className="rlative flex items-center justify-center w-full"
+        >
           <div className="relative w-1/2">
             <input
               type="text"
               placeholder="Search"
+              onChange={(e) => setSearchTerm(e.target.value)}
               value={searchTerm}
               className="bg-gray-100 px-4 py-2 pl-2 pr-12 rounded-lg focus:outline-none w-full placeholder:text-gray-700"
             />
