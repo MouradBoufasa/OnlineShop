@@ -14,12 +14,10 @@ const Footer = () => {
     <footer className="border-t py-12">
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 px-4 lg:px-0">
         <div className="">
-          <h3 className="text-lg text-gray-800 mb-4">
-            Newsletter
-          </h3>
+          <h3 className="text-lg text-gray-800 mb-4">Newsletter</h3>
           <p className="text-gray-500 mb-4">
-            Be the first to hear about new product,
-            exclusive events , and online offers
+            Be the first to hear about new product, exclusive events , and
+            online offers
           </p>
           <p className="font-medium text-sm text-gray-600 mb-6">
             Sign up and get 10% off on your first order.
@@ -42,78 +40,50 @@ const Footer = () => {
         </div>
         {/* Shop links */}
         <div className="">
-          <h3 className="text-lg text-gray-800 mb-4">
-            Shop
-          </h3>
+          <h3 className="text-lg text-gray-800 mb-4">Shop</h3>
           <ul className="space-y-2 text-gray-600">
             <li>
-              <Link
-                to="#"
-                className="hover:text-gray-500 transition-colors"
-              >
+              <Link to="#" className="hover:text-gray-500 transition-colors">
                 Men's Top wear
               </Link>
             </li>
             <li>
-              <Link
-                to="#"
-                className="hover:text-gray-500 transition-colors"
-              >
+              <Link to="#" className="hover:text-gray-500 transition-colors">
                 Women's Top wear
               </Link>
             </li>
             <li>
-              <Link
-                to="#"
-                className="hover:text-gray-500 transition-colors"
-              >
+              <Link to="#" className="hover:text-gray-500 transition-colors">
                 Men's Bottom wear
               </Link>
             </li>
             <li>
-              <Link
-                to="#"
-                className="hover:text-gray-500 transition-colors"
-              >
+              <Link to="#" className="hover:text-gray-500 transition-colors">
                 Women's Bottom wear
               </Link>
             </li>
           </ul>
         </div>
         <div className="">
-          <h3 className="text-lg text-gray-800 mb-4">
-            Support
-          </h3>
+          <h3 className="text-lg text-gray-800 mb-4">Support</h3>
           <ul className="space-y-2 text-gray-600">
             <li>
-              <Link
-                to="#"
-                className="hover:text-gray-500 transition-colors"
-              >
+              <Link to="#" className="hover:text-gray-500 transition-colors">
                 Contact Us
               </Link>
             </li>
             <li>
-              <Link
-                to="#"
-                className="hover:text-gray-500 transition-colors"
-              >
+              <Link to="#" className="hover:text-gray-500 transition-colors">
                 About Us
               </Link>
             </li>
             <li>
-              <Link
-                to="#"
-                className="hover:text-gray-500 transition-colors"
-              >
+              <Link to="#" className="hover:text-gray-500 transition-colors">
                 FAQs
               </Link>
             </li>
             <li>
-              <Link
-                to="#"
-                className="hover:text-gray-500 transition-colors"
-              >
+              <Link to="#" className="hover:text-gray-500 transition-colors">
                 Features
               </Link>
             </li>
@@ -121,9 +91,7 @@ const Footer = () => {
         </div>
         {/* Follow us */}
         <div>
-          <h3 className="text-lg text-gray-800 mb-4">
-            Follow us
-          </h3>
+          <h3 className="text-lg text-gray-800 mb-4">Follow us</h3>
           <div className="flex items-center space-x-4 mb-6">
             <a
               href="www.facebook.com"
@@ -151,9 +119,9 @@ const Footer = () => {
             </a>
           </div>
           <p className="text-gray-500">Call Us</p>
-          <p>
+          <p className="mt-4 flex items-center font-bold">
             <FaPhone className="inline-block mr-2 " />
-            +2137-77-76-66-06
+            +2137 77 76 66 06
           </p>
         </div>
       </div>
