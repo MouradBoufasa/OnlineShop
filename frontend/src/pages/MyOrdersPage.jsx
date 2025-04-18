@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const MyOrdersPage = () => {
   const [orders, setOrders] = useState();
-
+  const navigate = useNavigate();
   useEffect(() => {
     setTimeout(() => {
       const mockOrders = [
@@ -58,6 +59,10 @@ const MyOrdersPage = () => {
       setOrders(mockOrders);
     }, 1000);
   }, []);
+
+  const handleRowClick = (orderId) => {
+    navigate(`/order/${orderId}`);
+  };
   return (
     <div className="max-w-7xl mx-auto p-4 sm:p-6">
       <h2 className="text-xl sm:text-2xl font-bold mb-6">My Orders</h2>
@@ -79,6 +84,7 @@ const MyOrdersPage = () => {
               orders.map((order) => (
                 <tr
                   key={order._id}
+                  onClick={() => handleRowClick(order._id)}
                   className="border-b border-gray-200 hover:border-gray-50 cursor-pointer"
                 >
                   <td className="py-2 px-2 sm:py-4 sm:px-4">
@@ -105,14 +111,17 @@ const MyOrdersPage = () => {
                   <td className="py-2 px-2 sm:py-4 sm:px-4 font-semibold">
                     ${' 220'}
                   </td>
-                  <td
-                    className={`px-2 py-1 font-medium rounded-full text-center  ${
-                      order.orderIsPaid
-                        ? 'bg-green-500 text-gray-100'
-                        : 'bg-amber-500 text-gray-200'
-                    }`}
-                  >
-                    {order.orderIsPaid ? 'PAID' : 'PENDING'}
+                  <td className="text-center font-medium">
+                    <div
+                      className={`${
+                        order.orderIsPaid
+                          ? 'bg-green-100 text-green-700'
+                          : 'bg-amber-100 text-amber-700'
+                      } px-2 py-1 rounded-full text-sm font-medium mb-2`}
+                    >
+                      {/* Your content here, for example: */}
+                      {order.orderIsPaid ? 'Paid' : 'Pending'}
+                    </div>
                   </td>
                 </tr>
               ))

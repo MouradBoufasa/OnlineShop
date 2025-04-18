@@ -102,6 +102,15 @@ const FilterSidebar = () => {
     navigate(`?${params.toString()}`);
   };
 
+
+  const handlePriceChange = (e) => {
+    const newPrice = e.target.value;
+    setPriceRange([0, newPrice]);
+    const newFilters = { ...filters, minPrice: 0, maxPrice: newPrice };
+    setFilters(filters);
+    updateURLParams(newFilters);
+  };
+
   return (
     <div className="p-4">
       <h3 className="text-xl font-medium text-gray-800 mb4">Filter</h3>
@@ -165,6 +174,7 @@ const FilterSidebar = () => {
               type="checkbox"
               name="size"
               value={size}
+              checked={filters.size.includes(size)}
               onChange={handleFilterChange}
               className="mr-2 w-4 h-4 text-blue-500 focus:ring-blue-400 border-gray-300"
             />
@@ -182,6 +192,7 @@ const FilterSidebar = () => {
               type="checkbox"
               name="material"
               value={material}
+              checked={filters.material.includes(material)}
               onChange={handleFilterChange}
               className="mr-2 w-4 h-4 text-blue-500 focus:ring-blue-400 border-gray-300"
             />
@@ -192,13 +203,14 @@ const FilterSidebar = () => {
       </div>
       {/* Brands filter */}
       <div className="mb-6">
-        <label className="block text-gray-600 font-medium mb-2">Size</label>
+        <label className="block text-gray-600 font-medium mb-2">Brand</label>
         {brands.map((brand) => (
           <div key={brand} className="flex items-center mb-1">
             <input
               type="checkbox"
               name="brand"
               value={brand}
+              checked={filters.brand.includes(brand)}
               onChange={handleFilterChange}
               className="mr-2 w-4 h-4 text-blue-500 focus:ring-blue-400 border-gray-300"
             />
@@ -217,13 +229,13 @@ const FilterSidebar = () => {
           name="pricerange"
           min={0}
           max={100}
-          value={priceRange}
-          onChange={handleFilterChange}
+          value={priceRange[1]}
+          onChange={handlePriceChange}
           className="w-full h-2 bg-gray-300 rounded-lg appearance-none cursore-pointer"
         />
         <div className="flex justify-between text-gray-600 mt-2">
           <span>$0</span>
-          <span>${priceRange[1]}</span>
+          <span>${priceRange}</span>
         </div>
       </div>
     </div>

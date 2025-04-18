@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { HiOutlineUser } from 'react-icons/hi';
-import { RiShoppingCartLine } from 'react-icons/ri';
+import { RiAdminLine, RiShoppingCartLine } from 'react-icons/ri';
 import { HiBars3BottomRight } from 'react-icons/hi2';
 import SearchBar from './SearchBar';
 import CardDrawer from '../Layout/CardDrawer';
@@ -52,7 +52,14 @@ const Navbar = () => {
             Bottom Wear
           </Link>
         </div>
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-4 ">
+          <Link
+            to="/admin"
+            className=" px-5 py-2 bg-gray-500 text-gray-300 flex gap-2 rounded-full hover:bg-gray-300 hover:text-gray-500 hover:transition"
+          >
+            <RiAdminLine className="h-6 w-6  " />
+            <h3 className="text-md uppercase ">Admin</h3>
+          </Link>
           <Link to="/profile" className="hover:text-black">
             <HiOutlineUser className="h-6 w-6 text-gray-700" />
           </Link>

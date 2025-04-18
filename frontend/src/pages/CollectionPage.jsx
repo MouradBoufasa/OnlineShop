@@ -18,12 +18,13 @@ const CollectionPage = () => {
       setisSidebarOpen(false);
     }
   };
+
   useEffect(() => {
     //   Add Event listner for click
     document.addEventListener('mousedown', handleClickOutside);
     //   Clean event listener
     return document.removeEventListener('mousedown', handleClickOutside);
-  });
+  }, []);
   useEffect(() => {
     setTimeout(() => {
       const fetchedProducts = [
@@ -97,9 +98,8 @@ const CollectionPage = () => {
       </button>
       {/* Filter sideBar */}
       <div
-        className={`${
-          isSidebarOpen ? 'translate-x-0' : '-translate-0-full'
-        }fixed inset-y-0 z-50 left-0 w-64 bg-white overflow-y-auto transition-transform duration-300 lg:static lg:translate-x-0`}
+        className={`fixed inset-y-0 z-50 left-0 w-60 bg-white overflow-y-auto transition-transform duration-300 lg:static lg:translate-x-0 
+         ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
         ref={sidebarRef}
       >
         <FilterSidebar />

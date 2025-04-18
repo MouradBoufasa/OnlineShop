@@ -1,8 +1,30 @@
 import React from 'react';
-import FilterSidebar from './FilterSidebar';
+import { useSearchParams } from 'react-router-dom';
 
 const SortOption = () => {
-  return <div></div>;
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const handleSortChange = (e) => {
+    const sortBy = e.target.value;
+    searchParams.set('sortBy', sortBy);
+    setSearchParams(searchParams);
+  };
+
+  return (
+    <div className="mb-4 flex items-center justify-end">
+      <select
+        id="sort"
+        onChange={handleSortChange}
+        className="border border-gray-100 p-2 rounded-md focus:outline-none"
+        value={searchParams.get('sortBy') || ''}
+      >
+        <option value="">Default</option>
+        <option value="priceAsc">Price : Low to High</option>
+        <option value="priceDesc">Price: High to Low</option>
+        <option value="popularity">Popularity</option>
+      </select>
+    </div>
+  );
 };
 
 export default SortOption;
