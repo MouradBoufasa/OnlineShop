@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Outlet } from 'react-router-dom';
 import { FaBars } from 'react-icons/fa6';
 import AdminSidebar from './AdminSidebar';
 
@@ -32,6 +33,10 @@ const AdminLayout = () => {
       >
         {/* Sidebar */}
         <AdminSidebar />
+      </div>
+      {/* Main content */}
+      <div className="flex-grow p-6 overflow-auto">
+        <Outlet />
       </div>
     </div>
   );
