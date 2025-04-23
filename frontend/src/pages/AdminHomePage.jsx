@@ -43,14 +43,7 @@ const AdminHomePage = () => {
       totalPrice: 110,
       status: 'Processing',
     },
-    {
-      _id: 321515,
-      user: {
-        name: 'John doe',
-      },
-      totalPrice: 110,
-      status: 'Processing',
-    },
+
   ];
 
   return (
