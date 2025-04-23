@@ -5,6 +5,7 @@ const app = express();
 const connectDB = require("./config/db");
 
 const userRoutes = require("./routes/userRoutes");
+const productRoutes = require("./routes/productRoutes");
 
 app.use(express.json());
 app.use(cors());
@@ -24,6 +25,7 @@ app.get("/", (req, res) => {
 //API Routes
 
 app.use("/api/users", userRoutes);
+app.use("/api/products", productRoutes);
 
 app.listen(PORT, () => {
   console.log(`SERVER IS RUNNING ON PORT : , ${PORT} `);
