@@ -152,4 +152,62 @@ router.delete("/:id", protect, admin, async (req, res) => {
   }
 });
 
+
+// GET /api/products
+// GET ALL PRODUCTS WITH  OPTIONAL QUERY FILTERS
+router.get('/', async (req, res) => {
+  try {
+    const { collection, size, color, gender, minPrice, maxPrice, sortBy, search, category, material, brand, limit } = req.body;
+    let query = {}
+    
+    //FILTER LOGIC
+    if (collection && collection.toLocalLowerCase() !== "all") {
+  query.collection=collection
+}
+    if (category && category.toLocalLowerCase() !== "all") {
+  query.category=category
+}
+    if (material) {
+  query.material={$in:material.split(',')}
+}
+    if (brand) {
+  query.brand={$in:brand.split(',')}
+}
+    if (size) {
+  query.size={$in:size.split(',')}
+}
+    if (color) {
+  query.colors={$in:[color]}
+}
+    if (gender) {
+  query.gender=gender
+    }
+    if (minPrice || maxPrice) {
+      query.price = {}
+      if(minPrice) query.price.gte = Number(minPrice)
+      if(maxPrice) query.price.lte = Number(maxPrice)
+}
+    if (search) {
+      query.$or = [
+        { name: { $regex:search,$option:"i"}},
+        { description: { $regex:search,$option:"i"}}
+  ]
+    }
+    //SORT LOGIC
+    if (sortBy) {
+      switch (sortBy) {
+        case "priceAsc":
+          sort = { price: 1 }
+          break
+        case "priceDesc":
+          sort = { price: -1 }
+          break
+      }
+    }
+  } catch (error) {
+    
+  }
+})
+
+
 module.exports = router;
