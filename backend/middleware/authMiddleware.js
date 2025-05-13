@@ -8,16 +8,16 @@ const protect = async (req, res, next) => {
     req.headers.authorization &&
     req.headers.authorization.toLowerCase().startsWith("bearer")
   ) {
-    console.error(req.headers.authorization);
+    // console.log(req.headers.authorization);
     try {
-      token = req.headers.authorization.split(" ")[1];
+      token = req.headers.authorization.split(' ')[1];
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      req.user = await User.findById(decoded.user.id).select("-password");
+      req.user = await User.findById(decoded.user.id).select('-password');
       next();
     } catch (error) {
-      console.error("Token verification failed", error);
+      console.error('Token verification failed', error);
       res.status(401).json({
-        message: "TOKEN failed NOT AUTHORIZED",
+        message: 'TOKEN failed NOT AUTHORIZED',
       });
     }
   } else {

@@ -54,7 +54,7 @@ const checkoutSchema = new mongoose.Schema(
     paidAt: {
       type: Date,
     },
-    paidStatus: {
+    paymentStatus: {
       type: String,
       default: 'pending',
       // enum:["pending","paid","declined"]
