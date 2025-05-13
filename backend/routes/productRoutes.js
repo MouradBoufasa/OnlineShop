@@ -66,7 +66,7 @@ router.post("/", protect, admin, async (req, res) => {
 // Update an existing product ID
 // Private/Admin
 
-router.put("/:id", protect, admin, async (req, res) => {
+router.put('/:id', protect, admin, async (req, res) => {
   try {
     const {
       name,
@@ -124,90 +124,190 @@ router.put("/:id", protect, admin, async (req, res) => {
       res.json(updatedProduct);
     } else {
       res.status(404).json({
-        message: "Product not found",
+        message: 'Product not found',
       });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).send("SERVER ERROR");
+    res.status(500).send('SERVER ERROR');
   }
 });
 
 // DELETE /api/:id
 // DELETE A PRODUCT By ID
 
-router.delete("/:id", protect, admin, async (req, res) => {
+router.delete('/:id', protect, admin, async (req, res) => {
   try {
     // Find Product by ID
     const product = await Product.findById(req.params.id);
     if (product) {
       await product.deleteOne();
-      res.json({ message: "product removed with success" });
+      res.json({ message: 'product removed with success' });
     } else {
-      res.status(404).json({ message: "Product not found or already deleted" });
+      res.status(404).json({ message: 'Product not found or already deleted' });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).send("SERVER ERROR");
+    res.status(500).send('SERVER ERROR');
   }
 });
-
-
 // GET /api/products
 // GET ALL PRODUCTS WITH  OPTIONAL QUERY FILTERS
 router.get('/', async (req, res) => {
   try {
-    const { collection, size, color, gender, minPrice, maxPrice, sortBy, search, category, material, brand, limit } = req.body;
-    let query = {}
-    
+    const {
+      collection,
+      size,
+      color,
+      gender,
+      minPrice,
+      maxPrice,
+      sortBy,
+      search,
+      category,
+      material,
+      brand,
+      limit,
+    } = req.query;
+    let query = {};
+
     //FILTER LOGIC
-    if (collection && collection.toLocalLowerCase() !== "all") {
-  query.collection=collection
-}
-    if (category && category.toLocalLowerCase() !== "all") {
-  query.category=category
-}
+    if (collection && collection.toLocalLowerCase() !== 'all') {
+      query.collections = collection;
+    }
+    if (category && category.toLocalLowerCase() !== 'all') {
+      query.category = category;
+    }
     if (material) {
-  query.material={$in:material.split(',')}
-}
+      query.material = { $in: material.split(',') };
+    }
     if (brand) {
-  query.brand={$in:brand.split(',')}
-}
+      query.brand = { $in: brand.split(',') };
+    }
     if (size) {
-  query.size={$in:size.split(',')}
-}
+      query.size = { $in: size.split(',') };
+    }
     if (color) {
-  query.colors={$in:[color]}
-}
+      query.colors = { $in: [color] };
+    }
     if (gender) {
-  query.gender=gender
+      query.gender = gender;
     }
     if (minPrice || maxPrice) {
-      query.price = {}
-      if(minPrice) query.price.gte = Number(minPrice)
-      if(maxPrice) query.price.lte = Number(maxPrice)
-}
+      query.price = {};
+      if (minPrice) query.price.$gte = Number(minPrice);
+      if (maxPrice) query.price.$lte = Number(maxPrice);
+    }
     if (search) {
       query.$or = [
-        { name: { $regex:search,$option:"i"}},
-        { description: { $regex:search,$option:"i"}}
-  ]
+        { name: { $regex: search, $option: 'i' } },
+        { description: { $regex: search, $option: 'i' } },
+      ];
     }
     //SORT LOGIC
+    let sort = {};
     if (sortBy) {
       switch (sortBy) {
-        case "priceAsc":
-          sort = { price: 1 }
-          break
-        case "priceDesc":
-          sort = { price: -1 }
-          break
+        case 'priceAsc':
+          sort = { price: 1 };
+          break;
+        case 'priceDesc':
+          sort = { price: -1 };
+          break;
+        case 'popularity':
+          sort = { rating: -1 };
+          break;
+        default:
+          break;
       }
     }
+
+    //FETCH PRODUCTS AND APPLY SORTING AND LIMIT
+
+    let products = await Product.find(query)
+      .sort(sort)
+      .limit(Number(limit) || 0);
+    res.json(products);
   } catch (error) {
-    
+    console.error(error);
+    res.status(500).send('server ERROR');
   }
-})
+});
+
+// GET /api/products/best-seller
+// RETRIEVE THE PRODUCT WITH HIGHEST RATING
+
+router.get('/best-seller', async (req, res) => {
+  try {
+    const bestSeller = await Product.findOne().sort({ rating: -1 });
+    if (bestSeller) {
+      res.json(bestSeller);
+    } else {
+      res.status(404).json({
+        message: 'No best seller found',
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('SERVER ERROR');
+  }
+});
+
+// GET /api/products/new-arrivals
+// RETRIEVE  LATEST 8 PRODUCTS - CREATION DATE
+
+router.get('/new-arrivals', async (req, res) => {
+  try {
+    const newArrivals = await Product.find().sort({ createdAt: -1 }).limit(8);
+    res.json(newArrivals);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('SERVER ERROR');
+  }
+});
+
+// GET /api/products/:id
+// GET A SINGLE PRODUCT BY ID
+
+router.get('/:id', async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (product) {
+      res.json(product);
+    } else {
+      res.status(404).json({ message: 'PRODUCT NOT FOUND' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('SERVER ERROR');
+  }
+});
+
+// GET /api/products/similar/:id
+// RETRIEVE SIMILAR PRODUCTS BASED ON THE CURRENT PRODUCT'S CATEGORY OR GENDER
+
+router.get('/similar/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const product = await Product.findById(id);
+
+    if (!product) {
+      return res.status(404).json({
+        message: 'PRODUCT NOT FOUND',
+      });
+    }
+    const similarProducts = await Product.find({
+      _id: { $ne: id },
+      gender: product.gender,
+      category: product.category,
+    }).limit(4);
+    res.json(similarProducts);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('SERVER ERROR');
+  }
+});
+
 
 
 module.exports = router;
