@@ -51,7 +51,7 @@ router.put('/:id/pay', protect, async (req, res) => {
     if (!checkout) {
       return res.status(404).json({ message: 'checkout not found' });
     }
-    if (paymentDetails === 'paid') {
+    if (paymentStatus === 'paid') {
       checkout.isPaid = true;
       checkout.paymentStatus = paymentStatus;
       checkout.paymentDetails = paymentDetails;
@@ -72,7 +72,7 @@ router.put('/:id/pay', protect, async (req, res) => {
 
 router.post('/:id/finalize', protect, async (req, res) => {
   try {
-    const checkout = Checkout.findById(req.params.id);
+    const checkout = await Checkout.findById(req.params.id);
     if (!checkout) {
       return res.status(404).json({ message: 'checkout  not found' });
     }
@@ -80,7 +80,7 @@ router.post('/:id/finalize', protect, async (req, res) => {
       //Create final  order  based on the checkout details
       const finalOrder = await Order.create({
         user: checkout.user,
-        orderItems: checkout.orderItems,
+        orderItems: checkout.checkoutItems,
         shippingAddress: checkout.shippingAddress,
         paymentMethod: checkout.paymentMethod,
         totalPrice: checkout.totalPrice,
@@ -101,6 +101,7 @@ router.post('/:id/finalize', protect, async (req, res) => {
       res.status(400).json({ message: 'Checkout  is already finalized' });
     } else {
       res.status(400).json({ message: 'Checkout  is not paid' });
+      console.log(checkout.isPaid);
     }
   } catch (error) {
     console.error(error);
