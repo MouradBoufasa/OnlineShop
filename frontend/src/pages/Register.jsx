@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import register from '../assets/register.webp';
+import { registerUser } from '../redux/slices/authSlice';
+import { useDispatch } from 'react-redux';
 
 const Register = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  const dispatch = useDispatch();
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('User registered:', name, email, password);
+    dispatch(registerUser({ name, email, password }));
   };
   return (
     <div className="flex">
@@ -21,12 +23,16 @@ const Register = () => {
           <div className="flex justify-center mb-6">
             <h2 className="text-xl font-medium">Rabbit</h2>
           </div>
-          <h2 className="text-2xl font-bold text-center mb-6">Hey There</h2>
+          <h2 className="text-2xl font-bold text-center mb-6">
+            Hey There
+          </h2>
           <p className="text-center mb-6">
             Enter your username and password to login
           </p>
           <div className="mb-4">
-            <label className="block text-sm font-semibold mb-2">Name</label>
+            <label className="block text-sm font-semibold mb-2">
+              Name
+            </label>
             <input
               type="text"
               value={name}
@@ -36,7 +42,9 @@ const Register = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-semibold mb-2">Email</label>
+            <label className="block text-sm font-semibold mb-2">
+              Email
+            </label>
             <input
               type="email"
               value={email}
@@ -46,7 +54,9 @@ const Register = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-semibold mb-2">Password</label>
+            <label className="block text-sm font-semibold mb-2">
+              Password
+            </label>
             <input
               type="password"
               value={password}
@@ -57,7 +67,7 @@ const Register = () => {
           </div>
           <button
             type="submit"
-            className="w-full bg-black text-white p-2 font-semibold hover:bg-gray-800 transition"
+            className="w-full rounded-lg bg-black text-white p-2 font-semibold hover:bg-gray-800 transition"
           >
             Sign Up
           </button>

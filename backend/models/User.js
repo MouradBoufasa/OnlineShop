@@ -13,18 +13,17 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
       trim: true,
-      match: [/.+\@.+\..+/, "please enter a valid email address"],
+      match: [/.+\@.+\..+/, 'please enter a valid email address'],
     },
     password: {
       type: String,
       required: true,
       minLength: 6,
-      maxLength: 16,
     },
     role: {
       type: String,
-      enum: ["customer", "admin"],
-      default: "customer",
+      enum: ['customer', 'admin'],
+      default: 'customer',
     },
   },
   { timestamps: true }

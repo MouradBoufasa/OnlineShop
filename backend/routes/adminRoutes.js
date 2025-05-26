@@ -9,7 +9,7 @@ const router = express.Router();
 //GET ALL USERS(Admin only)
 //PRIVATE ADMIN
 
-router.get('/users', protect, admin, async (req, res) => {
+router.get('/', protect, admin, async (req, res) => {
   try {
     const users = await User.find({});
     res.json(users);
@@ -23,7 +23,7 @@ router.get('/users', protect, admin, async (req, res) => {
 //ADD a new user (admin only)
 //PRIVATE ADMIN
 
-router.post('/users', protect, admin, async (req, res) => {
+router.post('/', protect, admin, async (req, res) => {
   const { name, email, password, role } = req.body;
   try {
     let user = await User.findOne({ email });
@@ -38,6 +38,48 @@ router.post('/users', protect, admin, async (req, res) => {
     });
     await user.save();
     res.status(201).json({ message: 'USER CREATED SUCCESSFULLY', user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'SERVER ERROR' });
+  }
+});
+
+//PUT /api/admin/users/:id
+//Update user info (admin only) Name,email and role
+//Private/Admin
+
+router.put('/:id', protect, admin, async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (user) {
+      user.name = req.body.name || user.name;
+      user.email = req.body.email || user.email;
+      user.role = req.body.role || user.role;
+    }
+    console.log(
+      '$2b$12$GVBZpREZ8vxIAkSCmWYIVOgUolVrx56NOKez9bzCNfGYgR6hIMovy'.length
+    );
+    const updatedUser = await user.save();
+    res.json({ message: 'USER UPDATED', user: updatedUser });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'SERVER ERROR' });
+  }
+});
+
+// DELETE /api/admin/users/:id
+//DELETE USER (admin only)
+//Private/Admin
+
+router.delete('/:id', protect, admin, async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (user) {
+      await user.deleteOne();
+      res.json({ message: 'USER DELETED SUCCESSFULLY' });
+    } else {
+      res.status(404).json({ message: 'USER NOT FOUND' });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'SERVER ERROR' });
