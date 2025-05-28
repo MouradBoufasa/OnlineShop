@@ -104,3 +104,5 @@ const orderSlice = createSlice({
       );
   },
 });
+
+export default orderSlice.reducer;

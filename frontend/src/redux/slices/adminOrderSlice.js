@@ -33,12 +33,13 @@ export const fetchAllOrders = createAsyncThunk(
 
 //update order status(admin only)
 
-export const fetchAllOrders = createAsyncThunk(
-  'adminOrders/fetchAllOrders',
-  async (_, { rejectWithValue }) => {
+export const updateOderStatus = createAsyncThunk(
+  'adminOrders/updateOrderSatatus',
+  async ({ id, status }, { rejectWithValue }) => {
     try {
-      const response = await axios.get(
-        `${API_URL}/api/admin/orders`,
+      const response = await axios.put(
+        `${API_URL}/api/admin/orders/${id}`,
+        { status },
         {
           headers: {
             Authorization: USER_TOKEN,
@@ -51,3 +52,84 @@ export const fetchAllOrders = createAsyncThunk(
     }
   }
 );
+//Delet an order (admin only)
+
+export const deleteOrder = createAsyncThunk(
+  'adminOrders/deleteOrder',
+  async ({ id }, { rejectWithValue }) => {
+    try {
+      await axios.delete(
+        `${API_URL}/api/admin/orders/${id}`,
+        {
+          headers: {
+            Authorization: USER_TOKEN,
+          },
+        }
+      );
+      return id;
+    } catch (error) {
+      rejectWithValue(error.response.data);
+    }
+  }
+);
+
+const adminOrderSlice = createSlice({
+  name: 'adminOrders',
+  initialState: {
+    orders: [],
+    totalOrders: 0,
+    totalSales: 0,
+    loading: false,
+    error: null,
+  },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      //Fetch all orders
+      .addCase(fetchAllOrders.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        fetchAllOrders.fulfilled,
+        (state, action) => {
+          state.loading = false;
+          state.orders = action.payload;
+          state.totalOrders = action.payload.length;
+          //calculate totale sales
+          const totalSales = action.payload.reduce(
+            (acc, order) => {
+              return acc + order.totalPrice;
+            }
+          );
+          state.totalSales = totalSales;
+        }
+      )
+      .addCase(fetchAllOrders.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.message;
+      })
+
+      //update order status
+      .addCase(
+        updateOderStatus.fulfilled,
+        (state, action) => {
+          const updatedOrder = action.payload;
+          const orderIndex = state.orders.findIndex(
+            (order) => order._id === updatedOrder._id
+          );
+          if (orderIndex !== -1) {
+            state.orders[orderIndex] = updatedOrder;
+          }
+        }
+      )
+      //Delete Order
+      .addCase(deleteOrder.fulfilled, (state, action) => {
+        state.orders = state.orders.filter(
+          (order) => order._id !== action.payload
+        );
+      });
+  },
+});
+
+export default adminOrderSlice.reducer;

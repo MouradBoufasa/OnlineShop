@@ -167,7 +167,7 @@ const cartSlice = createSlice({
         state.cart = action.payload;
         saveCartToStorage(action.payload);
       })
-      .addCase(fetchCart.pending, (state, action) => {
+      .addCase(fetchCart.rejected, (state, action) => {
         state.loading = false;
         state.error =
           action.error.message || 'FAILED TO FETCH CART';
@@ -181,7 +181,7 @@ const cartSlice = createSlice({
         state.cart = action.payload;
         saveCartToStorage(action.payload);
       })
-      .addCase(addToCart.pending, (state, action) => {
+      .addCase(addToCart.rejected, (state, action) => {
         state.loading = false;
         state.error =
           action.payload?.message ||
@@ -200,7 +200,7 @@ const cartSlice = createSlice({
         }
       )
       .addCase(
-        updateCartItemQuantity.pending,
+        updateCartItemQuantity.rejected,
         (state, action) => {
           state.loading = false;
           state.error =
@@ -220,7 +220,7 @@ const cartSlice = createSlice({
           saveCartToStorage(action.payload);
         }
       )
-      .addCase(removeFromCart.pending, (state, action) => {
+      .addCase(removeFromCart.rejected, (state, action) => {
         state.loading = false;
         state.error =
           action.payload?.message ||
@@ -235,27 +235,13 @@ const cartSlice = createSlice({
         state.cart = action.payload;
         saveCartToStorage(action.payload);
       })
-      .addCase(mergeCart.pending, (state, action) => {
-        state.loading = false;
-        state.error =
-          action.payload?.message ||
-          'FAILED TO UPDATE ITEM QUANTITY';
-      })
-      .addCase(mergeCart.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(mergeCart.fulfilled, (state, action) => {
-        state.loading = false;
-        state.cart = action.payload;
-        saveCartToStorage(action.payload);
-      })
-      .addCase(mergeCart.pending, (state, action) => {
+      .addCase(mergeCart.rejected, (state, action) => {
         state.loading = false;
         state.error =
           action.payload?.message ||
           'FAILED TO UPDATE ITEM QUANTITY';
       });
+      
   },
 });
 

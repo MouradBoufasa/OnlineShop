@@ -3,7 +3,6 @@ import {
   createAsyncThunk,
 } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { act } from 'react';
 
 //fetch all users(admin only)
 
@@ -142,3 +141,5 @@ const adminSlice = createSlice({
       });
   },
 });
+
+export default adminSlice.reducer;

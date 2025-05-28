@@ -1,97 +1,10 @@
+import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa6';
+import {
+  FaChevronLeft,
+  FaChevronRight,
+} from 'react-icons/fa6';
 import { Link } from 'react-router-dom';
-
-const newArrivals = [
-  {
-    _id: '1',
-    name: 'stylish Jacket',
-    price: 120,
-    images: [
-      {
-        url: 'https://picsum.photos/500/500?random=1',
-        altText: 'Stylish Jacket',
-      },
-    ],
-  },
-  {
-    _id: '2',
-    name: 'stylish Jacket',
-    price: 120,
-    images: [
-      {
-        url: 'https://picsum.photos/500/500?random=2',
-        altText: 'Stylish Jacket',
-      },
-    ],
-  },
-  {
-    _id: '3',
-    name: 'stylish Jacket',
-    price: 120,
-    images: [
-      {
-        url: 'https://picsum.photos/500/500?random=3',
-        altText: 'Stylish Jacket',
-      },
-    ],
-  },
-  {
-    _id: '4',
-    name: 'stylish Jacket',
-    price: 120,
-    images: [
-      {
-        url: 'https://picsum.photos/500/500?random=4',
-        altText: 'Stylish Jacket',
-      },
-    ],
-  },
-  {
-    _id: '5',
-    name: 'stylish Jacket',
-    price: 120,
-    images: [
-      {
-        url: 'https://picsum.photos/500/500?random=5',
-        altText: 'Stylish Jacket',
-      },
-    ],
-  },
-  {
-    _id: '6',
-    name: 'stylish Jacket',
-    price: 120,
-    images: [
-      {
-        url: 'https://picsum.photos/500/500?random=6',
-        altText: 'Stylish Jacket',
-      },
-    ],
-  },
-  {
-    _id: '7',
-    name: 'stylish Jacket',
-    price: 120,
-    images: [
-      {
-        url: 'https://picsum.photos/500/500?random=7',
-        altText: 'Stylish Jacket',
-      },
-    ],
-  },
-  {
-    _id: '8',
-    name: 'stylish Jacket',
-    price: 120,
-    images: [
-      {
-        url: 'https://picsum.photos/500/500?random=8',
-        altText: 'Stylish Jacket',
-      },
-    ],
-  },
-];
 
 const NewArrivals = () => {
   const scrollRef = useRef(null);
@@ -102,16 +15,42 @@ const NewArrivals = () => {
   const [scrollLeft, setScrollLeft] = useState(false);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
 
-  const [canScrollRight, setCanScrollRight] = useState(false);
+  const [canScrollRight, setCanScrollRight] =
+    useState(false);
+
+  const [newArrivals, setNewArrivals] = useState([]);
+
+  useEffect(() => {
+    const fetchNewArrivals = async () => {
+      try {
+        const response = await axios.get(
+          `${
+            import.meta.env.VITE_BACKEND_URL
+          }/api/products/new-arrivals`
+        );
+        setNewArrivals(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchNewArrivals();
+  }, []);
 
   useEffect(() => {
     const container = scrollRef.current;
     if (container) {
-      container.addEventListener('scroll', updateScrollButtons);
+      container.addEventListener(
+        'scroll',
+        updateScrollButtons
+      );
       updateScrollButtons();
-      return () => container.removeEventListener('scroll', updateScrollButtons);
+      return () =>
+        container.removeEventListener(
+          'scroll',
+          updateScrollButtons
+        );
     }
-  });
+  }, [newArrivals]);
 
   const scroll = (direction) => {
     const scrollAmount = direction === 'left' ? -300 : 300;
@@ -129,7 +68,8 @@ const NewArrivals = () => {
       setCanScrollLeft(leftScroll > 0);
 
       const rightScrollable =
-        container.scrollWidth > leftScroll + container.clientWidth;
+        container.scrollWidth >
+        leftScroll + container.clientWidth;
       setCanScrollRight(rightScrollable);
     }
     console.log({
@@ -158,10 +98,13 @@ const NewArrivals = () => {
   return (
     <section className="py-16 px-4 lg:px-0">
       <div className="container mx-auto text-center mb-10 relative">
-        <h2 className="text-3xl font-bold mb-4">Explore New Arrivals</h2>
+        <h2 className="text-3xl font-bold mb-4">
+          Explore New Arrivals
+        </h2>
         <div className="text-lg text-gray-600 mb-8">
-          Discover the latest styles straight off the runway, freshly added to
-          keep your wardrobe on the cutting edge of fashion
+          Discover the latest styles straight off the
+          runway, freshly added to keep your wardrobe on the
+          cutting edge of fashion
         </div>
         {/* Scroll button */}
         <div className="absolute right-0 bottom-[-30px] flex space-x-2 ">
@@ -207,13 +150,20 @@ const NewArrivals = () => {
           >
             <img
               src={product.images[0]?.url}
-              alt={product.images[0]?.altText || product.name}
+              alt={
+                product.images[0]?.altText || product.name
+              }
               className="w-full h-[55vh] rounded-lg object-cover"
               draggable="false"
             />
             <div className="absolute bottom-0 left-0 right-0 backdrop-blur-md text-white p-4 rounded-b-lg">
-              <Link to={`/products/${product._id}`} className="block">
-                <h4 className="font-medium">{product.name}</h4>
+              <Link
+                to={`/products/${product._id}`}
+                className="block"
+              >
+                <h4 className="font-medium">
+                  {product.name}
+                </h4>
                 <p className="mt-1">${product.price}</p>
               </Link>
             </div>
